@@ -39,6 +39,7 @@ namespace Assignment2.Entities
             Console.WriteLine("b. List all Categories");
             Console.WriteLine("c. Delete a Category");
             Console.WriteLine("d. Search a Category");
+            Console.WriteLine("e. Main Menu");
             char ch1 = Convert.ToChar(Console.ReadLine());
 
             switch(ch1)
@@ -46,14 +47,36 @@ namespace Assignment2.Entities
                 case 'a':
                     Console.WriteLine("Enter Category Name");
                     var categoryName = Console.ReadLine();
+                    while(string.IsNullOrWhiteSpace(categoryName) || int.TryParse(categoryName,out _))
+                    {
+                        Console.WriteLine("Please Enter Only Char and It can not be Empty");
+                        categoryName = Console.ReadLine();
+                        //break;
+                    }
                     Console.WriteLine("Enter Short Code");
                     var shortCode = Console.ReadLine();
+                    var sc = categories.FindAll((i) => i.CategoryShortCode == shortCode);
+                   
+                    while ((string.IsNullOrWhiteSpace(shortCode) || int.TryParse(shortCode, out _)) || shortCode.Length > 4 || (sc.Count > 0))
+                    {
+                        Console.WriteLine("Please Enter Only Char/can't null/max 4 char/It should be Unique");
+                        shortCode = Console.ReadLine();
+                        sc = categories.FindAll((i) => i.CategoryShortCode == shortCode);
+
+                    }
+                    
                     Console.WriteLine("Enter Description");
                     var desc = Console.ReadLine();
+                    while(string.IsNullOrWhiteSpace(desc)||int.TryParse(desc,out _))
+                    {
+                        Console.WriteLine("Please Enter Only Char and It can not be Empty");
+                        desc = Console.ReadLine();
+                    }
                     AddCategory(categoryName, shortCode, desc);
                     break;
                 case 'b':
                     ListOfAllCategories();
+                    Console.ReadKey();
                     break;
                 case 'c':
                     DeleteCategory();
@@ -61,8 +84,12 @@ namespace Assignment2.Entities
                 case 'd':
                     SearchCategory();
                     break;
+                    case 'e':
+                    
+                    break;
                 default:
                     Console.WriteLine("Invalid Selection");
+                    CategoryOperationMenu();
                     break;
 
             }
@@ -81,14 +108,16 @@ namespace Assignment2.Entities
 
             });
             ListOfAllCategories();
+            Console.ReadKey();
         }
         public static void ListOfAllCategories()
         {
-            Console.WriteLine("Category Id" + "\t" + "Category Name" + "\t" + "Category Short Code" + "\t" + "Category Description\n");
+            //Console.WriteLine("Category Id" + "\t" + "Category Name" + "\t" + "Category Short Code" + "\t" + "Category Description\n");
             categories.ForEach((i) =>
             {
-                Console.WriteLine($"{i.Category_ID} \t\t {i.Category_Name}\t\t{i.CategoryShortCode}\t\t{i.CategoryDescription}");
+                Console.WriteLine($"{i.Category_ID} \n {i.Category_Name}\n{i.CategoryShortCode}\n{i.CategoryDescription}");
             });
+           
         }
 
         public static void DeleteCategory()
@@ -114,45 +143,35 @@ namespace Assignment2.Entities
         }
         public static void DeleteById(int id)
         {
-            bool flag = false;
-            categories.ForEach((i) =>
+            try
             {
-                if (i.Category_ID == id)
-                {
-                    categories.Remove(i);
-                    ListOfAllCategories();
-                }
-                else
-                {
-                    flag = true;
-                }
-            });
-            if (flag)
+                var data = categories.Single((i) => i.Category_ID == id);
+                categories.Remove(data);
+
+                ListOfAllCategories();
+                
+            }
+            catch
             {
                 Console.WriteLine("Id not Found");
             }
-
+            Console.ReadKey();
 
         }
         public static void DeleteByShortCode(string shortCode)
         {
-            bool flag = false;
-            categories.ForEach((i) =>
+            try
             {
-                if (i.CategoryShortCode == shortCode)
-                {
-                    categories.Remove(i);
-                    ListOfAllCategories();
-                }
-                else
-                {
-                    flag = true;
-                }
-            });
-            if (flag)
+                var data = categories.Single((i) => i.CategoryShortCode == shortCode);
+                categories.Remove(data);
+                ListOfAllCategories();
+                
+            }
+            catch
             {
                 Console.WriteLine("Short Code not Found");
             }
+            Console.ReadKey();
         }
 
         public static void SearchCategory()

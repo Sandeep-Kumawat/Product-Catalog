@@ -7,27 +7,33 @@ namespace Assignment2
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, Please Select Option");
-            Console.WriteLine("a. Category");
-            Console.WriteLine("b. Product");
-            Console.WriteLine("c. Exit App!");
+            bool exit = false;
+            while (!exit) {
+                Console.WriteLine("Hello, Please Select Option");
+                Console.WriteLine("a. Category");
+                Console.WriteLine("b. Product");
+                Console.WriteLine("c. Exit App!");
 
-            char ch = Convert.ToChar(Console.ReadLine());
+                char ch = Convert.ToChar(Console.ReadLine());
 
-            switch(ch)
-            {
-                case 'a':
-                    CategoryOperation.CategoryOperationMenu();
-                    break;
-                case 'b':
-                    ProductOperation.ProductOperationMenu();
-                    break;
-                case 'c':
-                    return;
-                    break;
-                default:
-                    Console.WriteLine("Invalid Selection");
-                    break;
+                switch (ch)
+                {
+                    case 'a':
+                        CategoryOperation.CategoryOperationMenu();
+                        break;
+                    case 'b':
+                        ProductOperation.ProductOperationMenu();
+                        break;
+                    case 'c':
+                        Console.WriteLine("Exit");
+                        exit = true;
+                        break;
+
+                    default:
+                        Console.WriteLine("Invalid Selection");
+                        break;
+                }
+                Console.Clear();
             }
         }
     }

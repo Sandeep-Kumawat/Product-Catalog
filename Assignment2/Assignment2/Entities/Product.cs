@@ -22,12 +22,5 @@ namespace Assignment2.Entities
         }
         public string ProductDescription { get; set; }
         public int Selling_Price { get; set; }
-
-        //public override string ToString()
-        //{
-        //    return this.Product_ID + this.product_Name + this.Manufacturer + this.
-        //}
-
-
     }
 }

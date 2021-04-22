@@ -38,11 +38,12 @@ namespace Assignment2.Entities
 
         public static void ProductOperationMenu()
         {
-            Console.WriteLine("Please Select Producyt Operation");
-            Console.WriteLine("a. Enter a Product");
+            Console.WriteLine("Please Select Product Operation");
+            Console.WriteLine("a. Add a Product");
             Console.WriteLine("b. List all Products");
             Console.WriteLine("c. Delete a Product");
             Console.WriteLine("d. Search a Product");
+            Console.WriteLine("e. Main Menu");
             char ch1 = Convert.ToChar(Console.ReadLine());
 
             switch (ch1)
@@ -50,14 +51,49 @@ namespace Assignment2.Entities
                 case 'a':
                     Console.WriteLine("Enter Product Name");
                     var ProductName = Console.ReadLine();
+                    while (string.IsNullOrWhiteSpace(ProductName) || int.TryParse(ProductName, out _))
+                    {
+                        Console.WriteLine("Please Enter Only Char and It can not be Empty");
+                        ProductName = Console.ReadLine();
+                       
+                    }
                     Console.WriteLine("Enter Short Code");
                     var shortCode = Console.ReadLine();
+                    var sc = products.FindAll((i) => i.ProductShortCode == shortCode);
+
+                    while ((string.IsNullOrWhiteSpace(shortCode) || int.TryParse(shortCode, out _)) || shortCode.Length > 4 || (sc.Count > 0))
+                    {
+                        Console.WriteLine("Please Enter Only Char/can't null/max 4 char/It should be Unique");
+                        shortCode = Console.ReadLine();
+                        sc = products.FindAll((i) => i.ProductShortCode == shortCode);
+
+                    }
                     Console.WriteLine("Enter Description");
                     var desc = Console.ReadLine();
+                    while (string.IsNullOrWhiteSpace(desc) || int.TryParse(desc, out _))
+                    {
+                        Console.WriteLine("Please Enter Only Char and It can not be Empty");
+                        desc = Console.ReadLine();
+                        
+                    }
                     Console.WriteLine("Enter Price");
-                    int price = Convert.ToInt32(Console.ReadLine());
+                    int price=-1;
+                    bool flag = Int32.TryParse(Console.ReadLine(), out price);
+                    while (!flag || price<=0)
+                    {
+                        
+                        Console.WriteLine("Please Enter Only Number and It can not be Empty/can not be negetive");
+                        flag= Int32.TryParse(Console.ReadLine(),out price);
+                        
+                    }
                     Console.WriteLine("Enter Manufacture Name");
                     var manufactureName = Console.ReadLine();
+                    while (string.IsNullOrWhiteSpace(manufactureName) || int.TryParse(manufactureName, out _))
+                    {
+                        Console.WriteLine("Please Enter Only Char and It can not be Empty");
+                        manufactureName = Console.ReadLine();
+                       
+                    }
                     AddProduct(ProductName, shortCode, desc, price, manufactureName);
                     break;
                 case 'b':
@@ -69,8 +105,12 @@ namespace Assignment2.Entities
                 case 'd':
                     SearchProduct();
                     break;
+                case 'e':
+                    
+                    break;
                 default:
                     Console.WriteLine("Invalid Selection");
+                    ProductOperationMenu();
                     break;
             }
         }
@@ -119,6 +159,7 @@ namespace Assignment2.Entities
                 //Console.WriteLine($"{i.Product_ID} \t\t {i.product_Name}\t\t{i.ProductShortCode}\t\t{i.ProductDescription}\t\t{i.Selling_Price}\t\t{s}\t\t{i.Manufacturer}");
                 Console.WriteLine($" Product ID :{i.Product_ID} \n Product Name :{i.product_Name}\n Product Short Code :{i.ProductShortCode}\n Product Description :{i.ProductDescription}\n Product Price :{i.Selling_Price}\n Product Category :{s}\n Product Manufacturer :{i.Manufacturer}");
             });
+            Console.ReadKey();
         }
         public static void DeleteProduct()
         {
@@ -142,42 +183,28 @@ namespace Assignment2.Entities
         }
         public static void DeleteById(int id)
         {
-            bool flag = false;
-            products.ForEach((i) =>
+
+            try
             {
-                if (i.Product_ID == id)
-                {
-                    products.Remove(i);
-                    ListOfAllProducts();
-                }
-                else
-                {
-                    flag = true;
-                }
-            });
-            if (flag)
-            {
+                var data = products.Single((i) => i.Product_ID == id);
+                products.Remove(data);
+                ListOfAllProducts();
+            }
+            catch {
                 Console.WriteLine("Id not Found");
             }
         }
         public static void DeleteByShortCode(string shortCode)
         {
-            bool flag = false;
-            products.ForEach((i) =>
+            try
             {
-                if (i.ProductShortCode == shortCode)
-                {
-                    products.Remove(i);
-                    ListOfAllProducts();
-                }
-                else
-                {
-                    flag = true;
-                }
-            });
-            if (flag)
+                var data = products.Single((i) => i.ProductShortCode == shortCode);
+                products.Remove(data);
+                ListOfAllProducts();
+            }
+            catch
             {
-                Console.WriteLine("Short Code not Found");
+                Console.WriteLine("short Code not Found");
             }
         }
         public static void SearchProduct()
